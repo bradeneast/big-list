@@ -1,0 +1,134 @@
+*,
+*::before,
+*::after {
+  padding: 0;
+  margin: 0;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  position: relative;
+  max-width: none;
+  min-width: 0;
+  border-radius: 0;
+  width: auto;
+  border: none;
+  box-shadow: none;
+  background: none;
+  outline: none;
+  scrollbar-width: none;
+}
+
+:root {
+  font-size: 144px;
+  --white: white;
+  --black: black;
+  --darkgrey: #808080;
+  --lightgrey: #a9a9a9;
+  --border: 2px solid;
+  --transition: 0.6s cubic-bezier(0.2, 0.4, 0.1, 1);
+}
+
+body {
+  line-height: 1;
+  font-family: "Inter", sans-serif;
+  letter-spacing: -0.08em;
+  padding: 0.2em;
+  display: grid;
+  background: var(--white);
+  color: var(--black);
+}
+
+body.overcast {
+  background: #222226;
+}
+
+body.night {
+  --white: black;
+  --black: white;
+}
+
+.day button.day,
+.night button.night,
+.overcast button.overcast {
+  border-color: var(--black);
+}
+
+footer {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0;
+  padding: 1em;
+}
+
+footer button {
+  padding: 1em;
+  border: var(--border) transparent;
+  cursor: pointer;
+}
+
+ul {
+  list-style: none;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 0.1em;
+  height: 1em;
+  transition: transform var(--transition), opacity 0.3s, margin var(--transition);
+}
+
+.shift {
+  transform: translate3d(0, 1em, 0);
+}
+
+.drug {
+  opacity: 0;
+  pointer-events: none;
+  margin-top: -1em;
+  transform: translate3d(0, 1em, 0);
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  border-radius: 0.2em;
+  border: 2px solid var(--black);
+  cursor: pointer;
+  width: 0.6em;
+  height: 0.6em;
+  transition: border-radius var(--transition), border-color var(--transition);
+}
+
+input[type="checkbox"]:checked {
+  border-color: var(--darkgrey);
+  border-radius: 50%;
+}
+
+input[type="checkbox"]:checked + input[type="text"] {
+  text-decoration: line-through;
+  color: var(--darkgrey);
+}
+
+input[type="text"] {
+  flex: 1;
+}
+
+::placeholder {
+  color: var(--lightgrey);
+}
+
+::selection {
+  background: var(--black);
+  color: var(--white);
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
