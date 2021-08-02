@@ -22,7 +22,7 @@
 }
 
 :root {
-  font-size: 144px;
+  font-size: calc(5vmin + 5vw + 10px);
   --white: white;
   --black: black;
   --darkgrey: #808080;
@@ -42,7 +42,7 @@ body {
 }
 
 body.overcast {
-  background: #222226;
+  background: #2a2a2f;
 }
 
 body.night {
