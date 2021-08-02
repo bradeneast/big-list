@@ -1,13 +1,15 @@
+// DECLARING THINGS //
 const $ = id => document.getElementById(id);
 const $$ = selector => document.querySelectorAll(selector);
 const checklistElement = $('checklist');
 const defaultTheme = 'day';
 
+
+// DRAGGING THINGS //
 let holding = false;
 let holdingWaiter;
 let itemNewIndex = 0;
 let startHoldingWaiter = element => holdingWaiter = setTimeout(() => holding = element, 150);
-
 
 function handleTouchStart(event) {
   startHoldingWaiter(event.target.closest('li'));
@@ -53,6 +55,7 @@ function handleTouchEnd(event) {
 }
 
 
+// SETTING UP THINGS //
 class Checklist {
   constructor(element, items) {
     this.element = element;
@@ -81,7 +84,6 @@ class Checklist {
   }
 }
 
-
 class Item {
   constructor(options = {}) {
     this.id = Math.round(new Date().getTime() / Math.random());
@@ -109,6 +111,7 @@ class Item {
 }
 
 
+// RENDERING THINGS //
 function render() {
 
   checklist.element.innerHTML = '';
@@ -180,6 +183,8 @@ function render() {
 }
 
 
+
+// INITIALIZING THINGS //
 const locallySavedChecklist = localStorage.getItem('checklist');
 const locallySavedTheme = localStorage.getItem('theme');
 const initialItems = locallySavedChecklist
@@ -201,7 +206,5 @@ addEventListener('mousemove', handleTouchMove);
 addEventListener('mouseup', handleTouchEnd);
 addEventListener('touchend', handleTouchEnd);
 
-
 render();
-
 setInterval(() => checklist.save(), 1000);
