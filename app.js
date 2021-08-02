@@ -1,6 +1,7 @@
 const $ = id => document.getElementById(id);
 const $$ = selector => document.querySelectorAll(selector);
 const checklistElement = $('checklist');
+const defaultTheme = 'day';
 
 let holding = false;
 let holdingWaiter;
@@ -16,6 +17,7 @@ function handleTouchMove(event) {
   requestAnimationFrame(() => {
 
     if (!holding) return;
+    document.documentElement.classList.add('noscroll');
     itemNewIndex = 0;
 
     let isTouch = event.touches;
@@ -45,6 +47,7 @@ function handleTouchEnd(event) {
 
   // Clear stuff
   clearTimeout(holdingWaiter);
+  document.documentElement.classList.remove('noscroll');
   $$('li').forEach(itemElement => itemElement.className = '');
   holding = false;
 }
@@ -177,12 +180,20 @@ function render() {
 }
 
 
-const localSave = localStorage.getItem('checklist');
-const initialItems = localSave
-  ? JSON.parse(localSave).map(opts => new Item(opts))
+const locallySavedChecklist = localStorage.getItem('checklist');
+const locallySavedTheme = localStorage.getItem('theme');
+const initialItems = locallySavedChecklist
+  ? JSON.parse(locallySavedChecklist).map(opts => new Item(opts))
   : [new Item()];
 const checklist = new Checklist(checklistElement, initialItems);
 
+document.body.classList.add(locallySavedTheme || defaultTheme);
+
+$$('[data-theme]').forEach(btn => btn.addEventListener('click', () => {
+  let theme = btn.getAttribute('data-theme');
+  document.body.className = theme;
+  localStorage.setItem('theme', theme)
+}))
 
 addEventListener('beforeunload', () => checklist.save());
 addEventListener('touchmove', handleTouchMove);
