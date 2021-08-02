@@ -145,7 +145,7 @@ function render() {
 
       switch (event.key) {
         case "Backspace":
-          if (cursorPosition === 0) {
+          if (cursorPosition === 0 && checklist.items.length > 1) {
             let previousItem = checklist.items[previousItemIndex];
             let previousItemName = previousItem ? previousItem.name : '';
             if (previousItem)
@@ -153,6 +153,8 @@ function render() {
             item.delete();
             if (previousItem)
               checklist.focusTo(previousItemIndex, previousItemName.length);
+            else
+              checklist.focusTo(currentItemIndex, 0);
           }
           break;
         case "Enter":
