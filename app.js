@@ -1,9 +1,19 @@
-// DECLARING THINGS //
+// HELPERS //
 const $ = id => document.getElementById(id);
 const $$ = selector => document.querySelectorAll(selector);
+const elem = (tagname, attributes = {}, children = []) => {
+  let result = document.createElement(tagname);
+  Object.entries(attributes).map(([key, value]) => result[key] = value);
+  children.map(child => result.append(child));
+  return result;
+}
+const ls = (key, value) => value == undefined
+  ? JSON.parse(localStorage.getItem(key))
+  : localStorage.setItem(key, JSON.stringify(value));
+
+// DECLARING THINGS //
 const checklistElement = $('checklist');
 const defaultTheme = 'day';
-
 
 // DRAGGING THINGS //
 let holding = false;
@@ -11,13 +21,14 @@ let holdingWaiter;
 let itemNewIndex = 0;
 let startHoldingWaiter = element => holdingWaiter = setTimeout(() => holding = element, 150);
 
+
 function handleTouchStart(event) {
   startHoldingWaiter(event.target.closest('li'));
 }
 
+
 function handleTouchMove(event) {
   requestAnimationFrame(() => {
-
     if (!holding) return;
     document.documentElement.classList.add('noscroll');
     itemNewIndex = 0;
@@ -37,8 +48,8 @@ function handleTouchMove(event) {
   })
 }
 
-function handleTouchEnd(event) {
 
+function handleTouchEnd(event) {
   if (holding) {
     let item = checklist.items.find(item => item.id == holding.id);
     let itemOldIndex = checklist.items.indexOf(item);
@@ -46,12 +57,56 @@ function handleTouchEnd(event) {
     checklist.items.splice(itemNewIndex, 0, item);
     render();
   }
-
   // Clear stuff
   clearTimeout(holdingWaiter);
   document.documentElement.classList.remove('noscroll');
   $$('li').forEach(itemElement => itemElement.className = '');
   holding = false;
+}
+
+
+function handleKeydown(event, item) {
+
+  let target = event.target;
+  let value = target.value;
+  let cursorPosition = target.selectionEnd;
+  let currentItemIndex = checklist.items.indexOf(item);
+  let prevIndex = currentItemIndex - 1;
+  let nextIndex = currentItemIndex + 1;
+
+  switch (event.key) {
+    case "Backspace":
+      if (cursorPosition === 0 && checklist.items.length > 1) {
+        event.preventDefault();
+        let previousItem = checklist.items[prevIndex];
+        let previousItemName = previousItem ? previousItem.name : '';
+        if (previousItem)
+          previousItem.rename(previousItemName + value);
+        item.delete();
+        if (previousItem)
+          checklist.focusTo(prevIndex, previousItemName.length);
+        else
+          checklist.focusTo(currentItemIndex, 0);
+      }
+      break;
+    case "Enter":
+      let newItemName = value.slice(cursorPosition);
+      let newItemIndex = currentItemIndex + 1;
+      item.rename(value.substr(0, cursorPosition));
+      checklist.addItem(new Item({ name: newItemName }), newItemIndex);
+      checklist.focusTo(newItemIndex, 0);
+      break;
+    case "ArrowUp":
+      event.preventDefault();
+      if (checklist.items[prevIndex])
+        checklist.focusTo(prevIndex, cursorPosition);
+      break;
+    case "ArrowDown":
+      event.preventDefault();
+      if (checklist.items[nextIndex])
+        checklist.focusTo(nextIndex, cursorPosition);
+      break;
+  }
 }
 
 
@@ -63,17 +118,17 @@ class Checklist {
   }
 
   save() {
-    localStorage.setItem('checklist', JSON.stringify(this.items));
+    ls('checklist', this.items);
   }
 
   focusTo(index, cursorPosition) {
     setTimeout(() => {
       let itemElement = $(this.items[index].id);
-      let itemNameInput = itemElement.querySelector('input[type="text"]')
+      let itemNameInput = itemElement.querySelector('input[type="text"]');
       itemNameInput.focus();
       itemNameInput.setSelectionRange(cursorPosition, cursorPosition);
     },
-      20
+      5
     );
   }
 
@@ -113,73 +168,21 @@ class Item {
 
 // RENDERING THINGS //
 function render() {
-
   checklist.element.innerHTML = '';
-
   checklist.items.forEach((item, index) => {
-
-    let element = document.createElement('li');
-    element.id = item.id;
-
-    let checkbox = document.createElement('input');
-    checkbox.type = 'checkbox';
-    checkbox.checked = item.done;
+    // Checkbox
+    let checkbox = elem('input', { type: 'checkbox', checked: item.done });
     checkbox.oninput = event => item.toggleDone(event.target.checked);
     checkbox.onmousedown = handleTouchStart;
     checkbox.ontouchstart = handleTouchStart;
-
-    let nameInput = document.createElement('input');
-    nameInput.type = 'text';
-    nameInput.value = item.name;
-    nameInput.placeholder = 'Untitled';
+    // Text input
+    let nameInput = elem('input', { type: 'text', value: item.name, placeholder: 'Untitled' });
+    if (index == 0) nameInput.autofocus = true;
     nameInput.oninput = event => item.rename(event.target.value);
-
-    nameInput.onkeydown = event => {
-
-      let target = event.target;
-      let value = target.value;
-      let cursorPosition = target.selectionEnd;
-      let currentItemIndex = checklist.items.indexOf(item);
-      let previousItemIndex = currentItemIndex - 1;
-      let nextItemIndex = currentItemIndex + 1;
-
-      switch (event.key) {
-        case "Backspace":
-          if (cursorPosition === 0 && checklist.items.length > 1) {
-            let previousItem = checklist.items[previousItemIndex];
-            let previousItemName = previousItem ? previousItem.name : '';
-            if (previousItem)
-              previousItem.rename(previousItemName + value);
-            item.delete();
-            if (previousItem)
-              checklist.focusTo(previousItemIndex, previousItemName.length);
-            else
-              checklist.focusTo(currentItemIndex, 0);
-          }
-          break;
-        case "Enter":
-          let newItemName = value.slice(cursorPosition);
-          let newItemIndex = currentItemIndex + 1;
-          item.rename(value.substr(0, cursorPosition));
-          checklist.addItem(new Item({ name: newItemName }), newItemIndex);
-          checklist.focusTo(newItemIndex, 0);
-          break;
-        case "ArrowUp":
-          event.preventDefault();
-          let previousItem = checklist.items[previousItemIndex];
-          if (previousItem) checklist.focusTo(previousItemIndex, cursorPosition);
-          break;
-        case "ArrowDown":
-          event.preventDefault();
-          let nextItem = checklist.items[nextItemIndex];
-          if (nextItem) checklist.focusTo(nextItemIndex, cursorPosition);
-          break;
-      }
-    }
-
-    element.append(checkbox);
-    element.append(nameInput);
-    checklist.element.append(element);
+    nameInput.onkeydown = event => handleKeydown(event, item);
+    // List item parent element
+    let itemElement = elem('li', { id: item.id }, [checkbox, nameInput]);
+    checklist.element.append(itemElement);
     checklist.save();
   })
 }
@@ -187,26 +190,35 @@ function render() {
 
 
 // INITIALIZING THINGS //
-const locallySavedChecklist = localStorage.getItem('checklist');
-const locallySavedTheme = localStorage.getItem('theme');
-const initialItems = locallySavedChecklist
-  ? JSON.parse(locallySavedChecklist).map(opts => new Item(opts))
-  : [new Item()];
+
+// CHECKLIST
+const recovered = ls('checklist');
+const initialItems = recovered ? recovered.map(opts => new Item(opts)) : [new Item()];
 const checklist = new Checklist(checklistElement, initialItems);
 
-document.body.classList.add(locallySavedTheme || defaultTheme);
-
-$$('[data-theme]').forEach(btn => btn.addEventListener('click', () => {
+// THEME
+const currentTheme = ls('theme');
+const themeToggles = $$('[data-theme]');
+document.body.classList.add(currentTheme || defaultTheme);
+// Listen for theme change
+themeToggles.forEach(btn => btn.onclick = () => {
   let theme = btn.getAttribute('data-theme');
   document.body.className = theme;
-  localStorage.setItem('theme', theme)
-}))
+  ls('theme', theme);
+})
 
+
+// LISTEN FOR DRAGGING
+ontouchmove = handleTouchMove;
+onmousemove = handleTouchMove;
+ontouchend = handleTouchEnd;
+onmouseup = handleTouchEnd;
+
+
+// SAVING THINGS
 addEventListener('beforeunload', () => checklist.save());
-addEventListener('touchmove', handleTouchMove);
-addEventListener('mousemove', handleTouchMove);
-addEventListener('mouseup', handleTouchEnd);
-addEventListener('touchend', handleTouchEnd);
-
-render();
 setInterval(() => checklist.save(), 1000);
+
+
+// RENDER
+render();
