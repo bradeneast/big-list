@@ -7,9 +7,16 @@ const elem = (tagname, attributes = {}, children = []) => {
   children.map(child => result.append(child));
   return result;
 }
-const ls = (key, value) => value == undefined
-  ? JSON.parse(localStorage.getItem(key))
-  : localStorage.setItem(key, JSON.stringify(value));
+const ls = (key, value) => {
+  try {
+    value == undefined
+      ? JSON.parse(localStorage.getItem(key))
+      : localStorage.setItem(key, JSON.stringify(value));
+  } catch (err) {
+    console.log(err);
+    return undefined;
+  }
+}
 
 // DECLARING THINGS //
 const checklistElement = $("checklist");
@@ -216,8 +223,8 @@ onmouseup = handleTouchEnd;
 
 
 // SAVING THINGS
-addEventListener("beforeunload", () => checklist.save());
-setInterval(() => checklist.save(), 1000);
+// addEventListener("beforeunload", () => checklist.save());
+// setInterval(() => checklist.save(), 1000);
 
 
 // RENDER
