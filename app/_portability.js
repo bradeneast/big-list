@@ -9,7 +9,6 @@ let importedList = [];
 const configureImport = () => {
 
   let modal = $('modal');
-
   let importItems = () => {
     importedList.map(opts => checklist.items.push(new Item(opts)));
     modal.classList.add('invisible');

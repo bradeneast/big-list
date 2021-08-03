@@ -1,6 +1,6 @@
 import render from "./_render";
 import checklist from "./_state";
-import { ls, random, $ } from "./_utils";
+import { ls, random, $, createDownload } from "./_utils";
 
 export class Checklist {
   constructor(element, items) {
@@ -10,6 +10,9 @@ export class Checklist {
 
   save() {
     ls("checklist", this.items);
+    const exportLink = $("export");
+    exportLink.href = createDownload(checklist);
+    exportLink.download = `big_list_${new Date().toLocaleDateString()}.json`;
   }
 
   focusTo(index, cursorPosition) {

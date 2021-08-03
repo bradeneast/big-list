@@ -32,14 +32,14 @@ export function handleKeydown(event, item) {
       checklist.focusTo(newItemIndex, 0);
       break;
     case "ArrowUp":
+      if (!checklist.items[prevIndex]) break;
       event.preventDefault();
-      if (checklist.items[prevIndex])
-        checklist.focusTo(prevIndex, cursorPosition);
+      checklist.focusTo(prevIndex, cursorPosition);
       break;
     case "ArrowDown":
+      if (!checklist.items[nextIndex]) break;
       event.preventDefault();
-      if (checklist.items[nextIndex])
-        checklist.focusTo(nextIndex, cursorPosition);
+      checklist.focusTo(nextIndex, cursorPosition);
       break;
   }
 }

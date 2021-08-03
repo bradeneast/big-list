@@ -1,12 +1,8 @@
 import { handleKeydown } from "./_keystrokes";
 import checklist from "./_state";
-import { createDownload, elem, $, random } from "./_utils";
-
-const exportLink = $("export");
+import { elem } from "./_utils";
 
 export default render = () => {
-  exportLink.href = createDownload(checklist);
-  exportLink.download = `big_list_${new Date().toLocaleDateString()}.json`;
   checklist.element.innerHTML = "";
   checklist.items.forEach((item, index) => {
     // Checkbox
