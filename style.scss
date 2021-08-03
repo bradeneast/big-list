@@ -9,6 +9,7 @@
   line-height: inherit;
   letter-spacing: inherit;
   text-transform: inherit;
+  text-align: inherit;
   position: relative;
   max-width: none;
   min-width: 0;
@@ -72,25 +73,77 @@ body {
   border-color: var(--black);
 }
 
-footer {
+header,
+footer,
+#modal {
   display: flex;
   position: fixed;
-  bottom: 0;
+  z-index: 99;
   right: 0;
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0;
-  padding: 1em;
+  text-align: right;
+
+  a,
+  label,
+  button {
+    display: block;
+    padding: 1em;
+    cursor: pointer;
+  }
 }
 
-[data-theme] {
+header {
+  top: 0;
   padding: 1em;
-  border: var(--border) transparent;
-  cursor: pointer;
 
-  &::after {
-    content: attr(data-theme);
+  label,
+  button {
+    text-decoration: underline;
   }
+}
+
+footer {
+  padding: 1em;
+  bottom: 0;
+
+  [data-theme] {
+    border: var(--border) transparent;
+
+    &::after {
+      content: attr(data-theme);
+    }
+  }
+}
+
+#modal {
+  position: fixed;
+  display: block;
+  text-align: right;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 1em;
+  z-index: 99;
+  transition: opacity var(--transition);
+  background: inherit;
+
+  button {
+    margin-top: 1em;
+    display: inline-block;
+    border: var(--border);
+
+    & + button {
+      margin-left: 1em;
+    }
+  }
+}
+
+.invisible {
+  opacity: 0;
+  pointer-events: none;
 }
 
 ul {
@@ -113,6 +166,15 @@ li {
   pointer-events: none;
   margin-top: -1em;
   transform: translate3d(0, 1em, 0);
+}
+
+input[type="file"] {
+  color: transparent;
+  position: absolute;
+  top: -99vw;
+  right: -99vw;
+  width: 0;
+  height: 0;
 }
 
 input[type="checkbox"] {
