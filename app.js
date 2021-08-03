@@ -9,7 +9,7 @@ const elem = (tagname, attributes = {}, children = []) => {
 }
 const ls = (key, value) => {
   try {
-    value == undefined
+    return value === undefined
       ? JSON.parse(localStorage.getItem(key))
       : localStorage.setItem(key, JSON.stringify(value));
   } catch (err) {
@@ -205,6 +205,7 @@ const checklist = new Checklist(checklistElement, initialItems);
 
 // THEME
 const currentTheme = ls("theme");
+console.log(currentTheme);
 const themeToggles = $$("[data-theme]");
 document.body.classList.add(currentTheme || defaultTheme);
 // Listen for theme change
