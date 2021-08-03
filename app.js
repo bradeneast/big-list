@@ -12,8 +12,8 @@ const ls = (key, value) => value == undefined
   : localStorage.setItem(key, JSON.stringify(value));
 
 // DECLARING THINGS //
-const checklistElement = $('checklist');
-const defaultTheme = 'day';
+const checklistElement = $("checklist");
+const defaultTheme = "day";
 
 // DRAGGING THINGS //
 let holding = false;
@@ -23,22 +23,22 @@ let startHoldingWaiter = element => holdingWaiter = setTimeout(() => holding = e
 
 
 function handleTouchStart(event) {
-  startHoldingWaiter(event.target.closest('li'));
+  startHoldingWaiter(event.target.closest("li"));
 }
 
 
 function handleTouchMove(event) {
   requestAnimationFrame(() => {
     if (!holding) return;
-    document.documentElement.classList.add('noscroll');
+    document.documentElement.classList.add("noscroll");
     itemNewIndex = 0;
 
     let isTouch = event.touches;
     let pointerPositionY = isTouch ? event.touches[0].pageY : event.clientY;
 
-    holding.classList.add('drug');
+    holding.classList.add("drug");
 
-    for (let itemElement of $$('li:not(.drug)')) {
+    for (let itemElement of $$("li:not(.drug)")) {
       let rect = itemElement.getBoundingClientRect();
       let rectMiddle = rect.top + rect.height / 2;
       let pointerIsAbove = rectMiddle > pointerPositionY;
@@ -59,8 +59,8 @@ function handleTouchEnd(event) {
   }
   // Clear stuff
   clearTimeout(holdingWaiter);
-  document.documentElement.classList.remove('noscroll');
-  $$('li').forEach(itemElement => itemElement.className = '');
+  document.documentElement.classList.remove("noscroll");
+  $$("li").forEach(itemElement => itemElement.className = "");
   holding = false;
 }
 
@@ -79,7 +79,7 @@ function handleKeydown(event, item) {
       if (cursorPosition === 0 && checklist.items.length > 1) {
         event.preventDefault();
         let previousItem = checklist.items[prevIndex];
-        let previousItemName = previousItem ? previousItem.name : '';
+        let previousItemName = previousItem ? previousItem.name : "";
         if (previousItem)
           previousItem.rename(previousItemName + value);
         item.delete();
@@ -118,13 +118,13 @@ class Checklist {
   }
 
   save() {
-    ls('checklist', this.items);
+    ls("checklist", this.items);
   }
 
   focusTo(index, cursorPosition) {
     setTimeout(() => {
       let itemElement = $(this.items[index].id);
-      let itemNameInput = itemElement.querySelector('input[type="text"]');
+      let itemNameInput = itemElement.querySelector(`input[type="text"]`);
       itemNameInput.focus();
       itemNameInput.setSelectionRange(cursorPosition, cursorPosition);
     },
@@ -142,7 +142,7 @@ class Checklist {
 class Item {
   constructor(options = {}) {
     this.id = Math.round(new Date().getTime() / Math.random());
-    this.name = options.name || '';
+    this.name = options.name || "";
     this.done = options.done || false;
   }
 
@@ -168,20 +168,20 @@ class Item {
 
 // RENDERING THINGS //
 function render() {
-  checklist.element.innerHTML = '';
+  checklist.element.innerHTML = "";
   checklist.items.forEach((item, index) => {
     // Checkbox
-    let checkbox = elem('input', { type: 'checkbox', checked: item.done });
+    let checkbox = elem("input", { type: "checkbox", checked: item.done });
     checkbox.oninput = event => item.toggleDone(event.target.checked);
     checkbox.onmousedown = handleTouchStart;
     checkbox.ontouchstart = handleTouchStart;
     // Text input
-    let nameInput = elem('input', { type: 'text', value: item.name, placeholder: 'Untitled' });
+    let nameInput = elem("input", { type: "text", value: item.name, placeholder: "Untitled" });
     if (index == 0) nameInput.autofocus = true;
     nameInput.oninput = event => item.rename(event.target.value);
     nameInput.onkeydown = event => handleKeydown(event, item);
     // List item parent element
-    let itemElement = elem('li', { id: item.id }, [checkbox, nameInput]);
+    let itemElement = elem("li", { id: item.id }, [checkbox, nameInput]);
     checklist.element.append(itemElement);
     checklist.save();
   })
@@ -192,19 +192,19 @@ function render() {
 // INITIALIZING THINGS //
 
 // CHECKLIST
-const recovered = ls('checklist');
+const recovered = ls("checklist");
 const initialItems = recovered ? recovered.map(opts => new Item(opts)) : [new Item()];
 const checklist = new Checklist(checklistElement, initialItems);
 
 // THEME
-const currentTheme = ls('theme');
-const themeToggles = $$('[data-theme]');
+const currentTheme = ls("theme");
+const themeToggles = $$("[data-theme]");
 document.body.classList.add(currentTheme || defaultTheme);
 // Listen for theme change
 themeToggles.forEach(btn => btn.onclick = () => {
-  let theme = btn.getAttribute('data-theme');
+  let theme = btn.getAttribute("data-theme");
   document.body.className = theme;
-  ls('theme', theme);
+  ls("theme", theme);
 })
 
 
@@ -216,7 +216,7 @@ onmouseup = handleTouchEnd;
 
 
 // SAVING THINGS
-addEventListener('beforeunload', () => checklist.save());
+addEventListener("beforeunload", () => checklist.save());
 setInterval(() => checklist.save(), 1000);
 
 
