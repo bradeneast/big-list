@@ -3,13 +3,15 @@ import checklist from "./_state";
 import render from './_render';
 import drag from './_drag';
 import { handleFileImport, handlePasteImport } from './_portability';
+import { handleGlobalKeydown, handleGlobalKeyup } from './_keystrokes';
 
-
-// THEME
 const currentTheme = ls("theme");
 const themeToggles = $$("[data-theme]");
-document.body.classList.add(currentTheme);
+const importFileInput = $('import_file');
+const importPasteButton = $('import_paste');
 
+// THEME
+document.body.classList.add(currentTheme);
 // Listen for theme change
 themeToggles.forEach(btn => btn.onclick = () => {
   let theme = btn.getAttribute("data-theme");
@@ -17,25 +19,20 @@ themeToggles.forEach(btn => btn.onclick = () => {
   ls("theme", theme);
 })
 
-
-// LISTEN FOR DRAGGING
+// LISTEN FOR THINGS
+// Keystroks
+onkeydown = handleGlobalKeydown;
+onkeyup = handleGlobalKeyup;
+// Dragging
 ontouchmove = drag.moved;
 onmousemove = drag.moved;
 ontouchend = drag.ended;
 onmouseup = drag.ended;
-
-
-// LISTEN FOR IMPORT
-const importFileInput = $('importFile');
-const importPasteButton = $('importPaste');
+// Importing
 importFileInput.oninput = handleFileImport;
 importPasteButton.onclick = handlePasteImport;
-
-
-// SAVING THINGS
-addEventListener("beforeunload", () => checklist.save());
-setInterval(() => document.hidden ? null : checklist.save(), 2000);
-
+// Leaving
+onbeforeunload = checklist.save;
 
 // RENDER
 render();

@@ -1,7 +1,26 @@
 import { Item } from "./_classes";
 import checklist from "./_state";
 
-export function handleKeydown(event, item) {
+let ctrl = false;
+let shift = false;
+
+export function handleGlobalKeydown(event) {
+  switch (event.key) {
+    case "z": if (ctrl) checklist.undo(); break;
+    case "Z": if (ctrl && shift) checklist.redo(); break;
+    case "Control": ctrl = true; break;
+    case "Shift": shift = true; break;
+  }
+}
+
+export function handleGlobalKeyup(event) {
+  switch (event.key) {
+    case "Control": ctrl = false; break;
+    case "Shift": shift = false; break;
+  }
+}
+
+export function handleItemKeydown(event, item) {
 
   let target = event.target;
   let value = target.value;

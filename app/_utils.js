@@ -22,12 +22,12 @@ export const ls = (key, value) => value === undefined
 
 /** Stringifies an object and returns a temporary blob url */
 export const createDownload = (item) => {
-  let blob = new Blob([JSON.stringify(item)], { type: 'application/json' });
+  let blob = new Blob([JSON.stringify(item)], { type: "application/json" });
   return URL.createObjectURL(blob);
 }
 
 /** Returns an unlinked deep copy of the object passed */
 export const deepCopy = obj => JSON.parse(JSON.stringify(obj));
 
-export const show = elem => elem.classList.remove('invisible');
-export const hide = elem => elem.classList.add('invisible');
+export const show = elem => elem.classList.remove("invisible");
+export const hide = elem => elem.classList.add("invisible");

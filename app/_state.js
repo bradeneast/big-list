@@ -1,5 +1,5 @@
-import { Checklist, Item } from './_classes';
-import { ls, $ } from './_utils';
+import { Checklist, Item } from "./_classes";
+import { ls, $ } from "./_utils";
 
 const checklistElement = $("checklist");
 const recovered = ls("checklist");
