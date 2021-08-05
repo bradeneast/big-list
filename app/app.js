@@ -2,7 +2,7 @@ import { $, $$, ls } from './_utils';
 import checklist from "./_state";
 import render from './_render';
 import drag from './_drag';
-import { handleImport } from './_portability';
+import { handleFileImport, handlePasteImport } from './_portability';
 
 
 // THEME
@@ -26,13 +26,15 @@ onmouseup = drag.ended;
 
 
 // LISTEN FOR IMPORT
-const importButton = $('import');
-importButton.oninput = handleImport;
+const importFileInput = $('importFile');
+const importPasteButton = $('importPaste');
+importFileInput.oninput = handleFileImport;
+importPasteButton.onclick = handlePasteImport;
 
 
 // SAVING THINGS
 addEventListener("beforeunload", () => checklist.save());
-setInterval(() => checklist.save(), 1000);
+setInterval(() => document.hidden ? null : checklist.save(), 2000);
 
 
 // RENDER

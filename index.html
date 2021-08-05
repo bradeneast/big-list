@@ -15,22 +15,38 @@
 </head>
 
 <body>
+
   <header>
-    <label for="import">Import</label>
-    <input id="import" type="file" accept=".json" />
+    <details>
+      <summary>Import...</summary>
+      <label for="importFile">Upload File
+        <input id="importFile" type="file" accept=".json" />
+      </label>
+      <button id="importPaste">Paste List</button>
+    </details>
     <a id="export" href="">Export</a>
   </header>
+
   <ul id="checklist"></ul>
+
   <footer>
     <button data-theme="day"></button>
     <button data-theme="overcast"></button>
     <button data-theme="night"></button>
   </footer>
-  <div id="modal" class="invisible">
+
+  <div class="modal invisible" id="configureImportDialogue">
     <div>That's a big list. Do you want to replace the current list or combine them both?</div>
     <button id="combine">Combine Lists</button>
     <button id="replace">Replace Current List</button>
   </div>
+
+  <div class="modal invisible" id="pasteImportDialogue">
+    <label for="pasteArea">Paste your incoming list here:</label>
+    <textarea id="pasteArea" placeholder="Paste your list here"></textarea>
+    <button id="importPastedText">Import Pasted Text</button>
+  </div>
+
 </body>
 
 </html>

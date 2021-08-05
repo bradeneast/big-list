@@ -28,3 +28,6 @@ export const createDownload = (item) => {
 
 /** Returns an unlinked deep copy of the object passed */
 export const deepCopy = obj => JSON.parse(JSON.stringify(obj));
+
+export const show = elem => elem.classList.remove('invisible');
+export const hide = elem => elem.classList.add('invisible');

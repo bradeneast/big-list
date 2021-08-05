@@ -1,23 +1,23 @@
 import { Item } from './_classes';
 import render from './_render';
 import checklist from './_state';
-import { $ } from './_utils';
+import { $, show, hide } from './_utils';
 
 let importedList = [];
 
 /** Launches a dialogue to choose how items should be imported */
 const configureImport = () => {
 
-  let modal = $('modal');
-  let importItems = () => {
+  let dialogue = $('configureImportDialogue');
+  show(dialogue);
+
+  function importItems() {
     importedList.map(opts => checklist.items.push(new Item(opts)));
-    modal.classList.add('invisible');
+    hide(dialogue)
     render();
   }
 
-  modal.classList.remove('invisible');
-
-  $('combine').onclick = importItems;
+  $('combine').onclick = importItems
   $('replace').onclick = () => {
     checklist.items = [];
     importItems();
@@ -25,7 +25,7 @@ const configureImport = () => {
 }
 
 /** Imports JSON data */
-export const handleImport = event => {
+export const handleFileImport = event => {
 
   let file;
   let reader = new FileReader();
@@ -47,4 +47,23 @@ export const handleImport = event => {
   }
 
   reader.readAsText(file);
+}
+
+export const handlePasteImport = event => {
+
+  let dialogue = $('pasteImportDialogue');
+  let textarea = dialogue.querySelector('textarea');
+  show(dialogue);
+
+  $('importPastedText').onclick = () => {
+    try {
+      importedList = JSON.parse(textarea.value).items;
+    } catch (err) {
+      console.log("Error parsing JSON. Importing as plain text.");
+      let lines = textarea.value.split('\n');
+      importedList = lines.map(line => new Item({ name: line }));
+    }
+    hide(dialogue);
+    configureImport();
+  }
 }

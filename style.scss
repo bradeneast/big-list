@@ -75,7 +75,7 @@ body {
 
 header,
 footer,
-#modal {
+.modal {
   display: flex;
   position: fixed;
   z-index: 99;
@@ -85,11 +85,14 @@ footer,
   letter-spacing: 0;
   text-align: right;
 
+  & > * {
+    padding: 1em;
+  }
+
   a,
+  summary,
   label,
   button {
-    display: block;
-    padding: 1em;
     cursor: pointer;
   }
 }
@@ -100,6 +103,8 @@ header {
 
   label,
   button {
+    display: block;
+    width: 100%;
     text-decoration: underline;
   }
 }
@@ -109,6 +114,7 @@ footer {
   bottom: 0;
 
   [data-theme] {
+    padding: 1em;
     border: var(--border) transparent;
 
     &::after {
@@ -117,7 +123,29 @@ footer {
   }
 }
 
-#modal {
+details {
+  summary {
+    margin-bottom: 1em;
+  }
+
+  & > * + * {
+    padding: 1em 0;
+  }
+}
+
+textarea {
+  display: block;
+  margin: 1em 0;
+  width: 100%;
+  min-height: 20em;
+  border: var(--border) var(--darkgrey);
+  padding: 1em;
+  resize: vertical;
+  user-select: auto;
+  text-transform: none;
+}
+
+.modal {
   display: block;
   text-align: right;
   top: 0;
