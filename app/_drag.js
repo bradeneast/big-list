@@ -5,7 +5,7 @@ import { $$ } from "./_utils";
 let holding = false;
 let holdingWaiter;
 let itemNewIndex = 0;
-let startHoldingWaiter = element => holdingWaiter = setTimeout(() => holding = element, 150);
+let startHoldingWaiter = element => holdingWaiter = setTimeout(() => holding = element, 250);
 
 export default drag = {
   started(event) {
