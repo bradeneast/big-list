@@ -1,7 +1,8 @@
 import { Item } from "./_classes";
 import render from "./_render";
 import checklist from "./_state";
-import { $, show, hide } from "./_utils";
+import { $, show, hide, createDownload } from "./_utils";
+
 
 let importedList = [];
 
@@ -42,7 +43,7 @@ export const handleFileImport = event => {
 
   reader.onerror = err => alert("error importing list: " + err);
   reader.onload = function () {
-    importedList = JSON.parse(this.result).items;
+    importedList = JSON.parse(this.result);
     configureImport();
   }
 
@@ -57,7 +58,7 @@ export const handlePasteImport = event => {
 
   $("import_pasted").onclick = () => {
     try {
-      importedList = JSON.parse(textarea.value).items;
+      importedList = JSON.parse(textarea.value);
     } catch (err) {
       console.log("error importing JSON: importing as plain text");
       let lines = textarea.value.split("\n");
@@ -66,4 +67,10 @@ export const handlePasteImport = event => {
     hide(dialogue);
     configureImport();
   }
+}
+
+export const makeExport = () => {
+  const exportLink = $("export");
+  exportLink.href = createDownload(checklist.items);
+  exportLink.download = `big_list_${new Date().toLocaleDateString()}.json`;
 }

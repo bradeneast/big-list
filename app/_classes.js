@@ -1,20 +1,17 @@
+import { makeExport } from "./_portability";
 import render from "./_render";
 import checklist from "./_state";
-import { ls, random, $, createDownload, deepCopy } from "./_utils";
+import { ls, random, $, deepCopy } from "./_utils";
 
 
 let saveLatency = 250;
 let saveWaiter = setTimeout(saveChecklist, saveLatency);
 
 function saveChecklist() {
-
-  const exportLink = $("export");
-  exportLink.href = createDownload(checklist);
-  exportLink.download = `big_list_${new Date().toLocaleDateString()}.json`;
-
+  // Make export blob available
+  makeExport();
   // Save to localStorage
   ls("checklist", checklist.items);
-
   // Update history
   let { states, index } = checklist.history;
   let isNewestVersion = states.length - 1 == index;
