@@ -52,6 +52,7 @@ body {
   &.night {
     --white: black;
     --black: white;
+    --body-background: var(--white);
     --darkgrey: #636363;
     --translucent: rgba(255, 255, 255, 0.2);
   }
