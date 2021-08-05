@@ -30,6 +30,14 @@ export function handleItemKeydown(event, item) {
   let nextIndex = currentItemIndex + 1;
 
   switch (event.key) {
+    case "Delete":
+      if (cursorPosition == value.length) {
+        let nextItem = checklist.items[nextIndex];
+        item.setName(item.name + nextItem.name);
+        nextItem.delete();
+        checklist.focusTo(currentItemIndex, cursorPosition);
+      }
+      break;
     case "Backspace":
       if (cursorPosition === 0 && checklist.items.length > 1) {
         event.preventDefault();
