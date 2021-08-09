@@ -4,6 +4,7 @@ import render from './_render';
 import drag from './_drag';
 import { handleFileImport, handlePasteImport } from './_portability';
 import { handleGlobalKeydown, handleGlobalKeyup } from './_keystrokes';
+import handleGlobalClick from './_clicks';
 
 const currentTheme = ls("theme");
 const themeToggles = $$("[data-theme]");
@@ -20,6 +21,9 @@ themeToggles.forEach(btn => btn.onclick = () => {
 })
 
 // LISTEN FOR THINGS
+// Click
+onclick = handleGlobalClick;
+ontouchstart = handleGlobalClick;
 // Keystroks
 onkeydown = handleGlobalKeydown;
 onkeyup = handleGlobalKeyup;
