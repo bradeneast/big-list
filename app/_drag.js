@@ -35,12 +35,19 @@ export default drag = {
 
   ended() {
     if (holding) {
+
       let item = checklist.items.find(item => item.id == holding.id);
       let itemOldIndex = checklist.items.indexOf(item);
+
       checklist.items.splice(itemOldIndex, 1);
       checklist.items.splice(itemNewIndex, 0, item);
+
       render();
+
+      document.activeElement.focus();
+      document.activeElement.blur();
     }
+
     // Clear stuff
     clearTimeout(holdingWaiter);
     document.documentElement.classList.remove("noscroll");
