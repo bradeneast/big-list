@@ -60,9 +60,9 @@ export const handlePasteImport = event => {
     try {
       importedList = JSON.parse(textarea.value);
     } catch (err) {
-      console.log("error importing JSON: importing as plain text");
-      let lines = textarea.value.split("\n");
-      importedList = lines.map(line => new Item({ name: line }));
+      importedList = textarea.value
+        .split("\n")
+        .map(line => new Item({ name: line }));
     }
     hide(dialogue);
     configureImport();

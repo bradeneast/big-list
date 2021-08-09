@@ -97,6 +97,12 @@ footer,
   button {
     cursor: pointer;
   }
+
+  button.cancel {
+    border: none;
+    color: var(--darkgrey);
+    text-decoration: underline;
+  }
 }
 
 header {
@@ -156,6 +162,8 @@ textarea {
   text-align: right;
   top: 0;
   right: 0;
+  left: 0;
+  bottom: 0;
   padding: 1em;
   z-index: 99;
   background: inherit;
