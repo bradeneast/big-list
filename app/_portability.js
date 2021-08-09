@@ -6,8 +6,9 @@ import { $, show, hide, createDownload } from "./_utils";
 
 let importedList = [];
 
+
 /** Launches a dialogue to choose how items should be imported */
-const configureImport = () => {
+function configureImport() {
 
   let dialogue = $("import_config");
   show(dialogue);
@@ -25,8 +26,9 @@ const configureImport = () => {
   }
 }
 
+
 /** Imports JSON data */
-export const handleFileImport = event => {
+export function handleFileImport(event) {
 
   let file;
   let reader = new FileReader();
@@ -50,7 +52,7 @@ export const handleFileImport = event => {
   reader.readAsText(file);
 }
 
-export const handlePasteImport = event => {
+export function handlePasteImport(event) {
 
   let dialogue = $("paste_dialogue");
   let textarea = dialogue.querySelector("textarea");
@@ -69,7 +71,7 @@ export const handlePasteImport = event => {
   }
 }
 
-export const makeExport = () => {
+export function makeExport() {
   const exportLink = $("export");
   exportLink.href = createDownload(checklist.items);
   exportLink.download = `big_list_${new Date().toLocaleDateString()}.json`;

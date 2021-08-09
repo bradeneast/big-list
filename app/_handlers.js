@@ -1,10 +1,69 @@
-import { Item } from "./_classes";
 import checklist from "./_state";
+import { $$, hide } from "./_utils";
+import { Item } from "./_classes";
+import render from "./_render";
+
 
 let ctrl = false;
 let shift = false;
+let holding = false;
+let holdingWaiter;
+let itemNewIndex = 0;
+let startHoldingWaiter = element => holdingWaiter = setTimeout(() => holding = element, 250);
 
-export function handleGlobalKeydown(event) {
+
+export function dragStart(event) {
+  startHoldingWaiter(event.target.closest("li"));
+}
+
+
+export function dragMove(event) {
+  requestAnimationFrame(() => {
+    if (!holding) return;
+    document.documentElement.classList.add("noscroll");
+    itemNewIndex = 0;
+
+    let isTouch = event.touches;
+    let pointerPositionY = isTouch ? event.touches[0].pageY : event.clientY;
+
+    holding.classList.add("drug");
+
+    for (let itemElement of $$("li:not(.drug)")) {
+      let rect = itemElement.getBoundingClientRect();
+      let rectMiddle = rect.top + rect.height / 2;
+      let pointerIsAbove = rectMiddle > pointerPositionY;
+      itemElement.classList.toggle("shift", pointerIsAbove);
+      if (!pointerIsAbove) itemNewIndex += 1;
+    }
+  })
+}
+
+
+export function dragEnd() {
+
+  if (holding) {
+
+    let item = checklist.items.find(item => item.id == holding.id);
+    let itemOldIndex = checklist.items.indexOf(item);
+
+    checklist.items.splice(itemOldIndex, 1);
+    checklist.items.splice(itemNewIndex, 0, item);
+
+    render();
+
+    document.activeElement.focus();
+    document.activeElement.blur();
+  }
+
+  // Clear stuff
+  clearTimeout(holdingWaiter);
+  document.documentElement.classList.remove("noscroll");
+  $$("li").forEach(itemElement => itemElement.className = "");
+  holding = false;
+}
+
+
+export function globalKeydown(event) {
   switch (event.key) {
     case "z": if (ctrl) checklist.undo(); break;
     case "Z": if (ctrl && shift) checklist.redo(); break;
@@ -13,14 +72,16 @@ export function handleGlobalKeydown(event) {
   }
 }
 
-export function handleGlobalKeyup(event) {
+
+export function globalKeyup(event) {
   switch (event.key) {
     case "Control": ctrl = false; break;
     case "Shift": shift = false; break;
   }
 }
 
-export function handleItemKeydown(event, item) {
+
+export function itemKeydown(event, item) {
 
   let target = event.target;
   let value = target.value;
@@ -69,4 +130,14 @@ export function handleItemKeydown(event, item) {
       checklist.focusTo(nextIndex, cursorPosition);
       break;
   }
+}
+
+
+export function globalClick({ target }) {
+
+  if (target == checklist.element && checklist.items[checklist.items.length - 1].name.length)
+    checklist.addItem();
+
+  if (target.classList.contains("cancel"))
+    $$(".modal").forEach(modal => hide(modal));
 }

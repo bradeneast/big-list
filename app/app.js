@@ -1,10 +1,8 @@
 import { $, $$, ls } from './_utils';
 import checklist from "./_state";
 import render from './_render';
-import drag from './_drag';
 import { handleFileImport, handlePasteImport } from './_portability';
-import { handleGlobalKeydown, handleGlobalKeyup } from './_keystrokes';
-import handleGlobalClick from './_clicks';
+import * as handle from './_handlers';
 
 const currentTheme = ls("theme");
 const themeToggles = $$("[data-theme]");
@@ -22,16 +20,16 @@ themeToggles.forEach(btn => btn.onclick = () => {
 
 // LISTEN FOR THINGS
 // Click
-onclick = handleGlobalClick;
-ontouchstart = handleGlobalClick;
+onclick = handle.globalClick;
+ontouchstart = handle.globalClick;
 // Keystroks
-onkeydown = handleGlobalKeydown;
-onkeyup = handleGlobalKeyup;
+onkeydown = handle.globalKeydown;
+onkeyup = handle.globalKeyup;
 // Dragging
-ontouchmove = drag.moved;
-onmousemove = drag.moved;
-ontouchend = drag.ended;
-onmouseup = drag.ended;
+ontouchmove = handle.dragMove;
+onmousemove = handle.dragMove;
+ontouchend = handle.dragEnd;
+onmouseup = handle.dragEnd;
 // Importing
 importFileInput.oninput = handleFileImport;
 importPasteButton.onclick = handlePasteImport;

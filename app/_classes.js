@@ -18,6 +18,7 @@ function saveChecklist() {
   if (isNewestVersion) checklist.makeHistory();
 }
 
+
 export class Checklist {
   constructor(element, items) {
     this.element = element;
@@ -87,6 +88,7 @@ export class Checklist {
     this.focusTo(index);
   }
 }
+
 
 export class Item {
   constructor(options = {}) {
