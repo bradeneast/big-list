@@ -116,7 +116,7 @@ export function itemKeydown(event, item) {
       let newItemName = value.slice(cursorPosition);
       let newItemIndex = currentItemIndex + 1;
       item.name = value.substr(0, cursorPosition);
-      checklist.addItem(new Item({ name: newItemName }), newItemIndex);
+      checklist.addItem(new Item({ name: newItemName, done: item.done }), newItemIndex);
       checklist.focusTo(newItemIndex, 0);
       break;
     case "ArrowUp":
@@ -134,10 +134,6 @@ export function itemKeydown(event, item) {
 
 
 export function globalClick({ target }) {
-
-  if (target == checklist.element && checklist.items[checklist.items.length - 1].name.length)
-    checklist.addItem();
-
   if (target.classList.contains("cancel"))
-    $$(".modal").forEach(modal => hide(modal));
+    $$(".modal").forEach(hide);
 }
